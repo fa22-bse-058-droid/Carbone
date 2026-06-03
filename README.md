@@ -1,4 +1,3 @@
-```markdown
 # Carbone — Luxury Automobile Showroom
 
 A full-stack luxury car showroom web application built as a portfolio project for **Code Eater** agency. Designed to demonstrate high-end UI/UX, cinematic animations, and modern full-stack architecture.
@@ -62,19 +61,6 @@ A full-stack luxury car showroom web application built as a portfolio project fo
 
 ---
 
-## Car Categories
-
-- Luxury
-- Sports
-- Electric
-- Classic / Old Money
-- SUV
-- Pre-owned / Used
-
----
-
-## Design System
-
 ```
 Background:   #080808 · #111111 · #1a1a1a
 Accent Gold:  #C9A96E
@@ -85,10 +71,8 @@ Heading font: Cormorant Garamond (300, 400, 500)
 Body font:    Montserrat (300, 400, 500)
 ```
 
+
 ---
-
-## Project Structure
-
 ```
 carbone-web/
 ├── src/
@@ -116,55 +100,3 @@ carbone-web/
 │   └── hero-poster.jpg
 └── .env
 ```
-
----
-
-## Getting Started
-
-```bash
-# Clone the repo
-git clone https://github.com/your-username/Carbone.git
-cd Carbone
-
-# Install dependencies
-npm install
-
-# Add environment variables
-cp .env.example .env
-# Fill in VITE_API_URL
-
-# Run dev server
-npm run dev
-```
-
----
-
-## Environment Variables
-
-```env
-VITE_API_URL=http://localhost:8000/api
-VITE_ANTHROPIC_API_KEY=your_key_here
-```
-
----
-
-## Brand
-
-**Carbone** is a fictional luxury automobile showroom brand created for portfolio demonstration purposes by Code Eater agency.
-
-Logo: CB monogram — beveled rectangle pillar through interlocked serif C and B letterforms. White on black. No color. Pure typographic luxury.
-
----
-
-## Status
-
-🚧 Currently in active development
-
----
-
-*Built by [Code Eater](https://github.com/your-agency) — We eat code for breakfast.*
-```
-
----
-
-GitHub pe `README.md` file mein paste karo, username aur agency link apna daal dena. Yeh README portfolio visitors aur potential clients dono ke liye professional impression dega.
