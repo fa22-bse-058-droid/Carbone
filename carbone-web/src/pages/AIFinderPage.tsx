@@ -25,9 +25,9 @@ const QUESTIONS: Question[] = [
     id: 1,
     question: 'What is your budget?',
     options: [
-      { label: 'Under 50L', value: 'under-50l' },
-      { label: '50L – 1 Cr', value: '50l-1cr' },
-      { label: 'Above 1 Cr', value: 'above-1cr' },
+      { label: '50L – 1 Crore', value: '50l-1cr' },
+      { label: '1 Crore – 2 Crore', value: '1cr-2cr' },
+      { label: 'Above 2 Crore', value: 'above-2cr' },
     ],
   },
   {
@@ -49,7 +49,6 @@ const QUESTIONS: Question[] = [
     ],
   },
 ]
-
 export default function AIFinderPage() {
   const navigate = useNavigate()
   const [currentQ, setCurrentQ] = useState(0)

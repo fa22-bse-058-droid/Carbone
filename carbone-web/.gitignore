@@ -1,14 +1,6 @@
-# Python
 carbone-backend/venv/
 carbone-backend/__pycache__/
-carbone-backend/*.pyc
 carbone-backend/db.sqlite3
 carbone-backend/.env
-
-# Node
 carbone-web/node_modules/
 carbone-web/dist/
-
-# OS
-.DS_Store
-Thumbs.db

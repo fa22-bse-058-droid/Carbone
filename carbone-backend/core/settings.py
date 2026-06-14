@@ -105,4 +105,4 @@ REST_FRAMEWORK = {
 }
 
 # ── Anthropic ─────────────────────────────────────────────────────────────────
-ANTHROPIC_API_KEY = env('ANTHROPIC_API_KEY', default='')
+GROQ_API_KEY = env('GROQ_API_KEY')

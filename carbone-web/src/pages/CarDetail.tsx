@@ -6,6 +6,27 @@ import client from '../api/client'
 
 type ViewTab = 'photos' | '3d'
 
+const MODEL_MAP: Record<number, string> = {
+  1: '/models/mercedes-eclass.glb',
+  2: '/models/mercedes-eclass.glb',
+  3: '/models/mercedes-eclass.glb',
+  4: '/models/mercedes-eclass.glb',
+  5: '/models/mercedes-eclass.glb',
+  6: '/models/mercedes-eclass.glb',
+  7: '/models/honda-civic-type-r.glb',
+  8: '/models/honda-civic-type-r.glb',
+  9: '/models/honda-civic-type-r.glb',
+  10: '/models/tesla-model3.glb',
+  11: '/models/tesla-model3.glb',
+  12: '/models/tesla-model3.glb',
+  13: '/models/aston-vulcan.glb',
+  14: '/models/aston-vulcan.glb',
+  15: '/models/aston-vulcan.glb',
+  16: '/models/honda-s800.glb',
+  17: '/models/honda-s800.glb',
+  18: '/models/honda-s800.glb',
+}
+
 interface CarSpecs {
   engine: string
   horsepower: number
@@ -66,19 +87,17 @@ export default function CarDetail() {
 
   if (isLoading) return (
     <div style={{ minHeight: '100vh', background: '#080808', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ fontFamily: 'Cormorant Garamond, serif', fontWeight: 300, fontSize: '24px', letterSpacing: '0.3em', color: 'rgba(245,245,245,0.3)', textTransform: 'uppercase' }}>
-        Loading...
-      </div>
+      <div style={{ fontFamily: 'Cormorant Garamond, serif', fontWeight: 300, fontSize: '24px', letterSpacing: '0.3em', color: 'rgba(245,245,245,0.3)', textTransform: 'uppercase' }}>Loading...</div>
     </div>
   )
 
   if (isError || !car) return (
     <div style={{ minHeight: '100vh', background: '#080808', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ fontFamily: 'Cormorant Garamond, serif', fontWeight: 300, fontSize: '24px', letterSpacing: '0.3em', color: 'rgba(245,245,245,0.3)', textTransform: 'uppercase' }}>
-        Car not found
-      </div>
+      <div style={{ fontFamily: 'Cormorant Garamond, serif', fontWeight: 300, fontSize: '24px', letterSpacing: '0.3em', color: 'rgba(245,245,245,0.3)', textTransform: 'uppercase' }}>Car not found</div>
     </div>
   )
+
+  const modelSrc = MODEL_MAP[car.id] || null
 
   const allImages = car.images.length > 0
     ? car.images.map(img => img.image_url)
@@ -101,9 +120,21 @@ export default function CarDetail() {
     `Hi, I'm interested in the ${car.year} ${car.name} (${formatPrice()}) listed on Carbone. Please share more details.`
   )
 
-  const handleBooking = (e: React.FormEvent) => {
+  const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault()
-    setFormSent(true)
+    try {
+      await client.post('/bookings/', {
+        car: car.id,
+        name: bookingForm.name,
+        phone: bookingForm.phone,
+        email: bookingForm.email,
+        date: bookingForm.date,
+        time_slot: bookingForm.time,
+      })
+      setFormSent(true)
+    } catch (err) {
+      console.error('Booking failed:', err)
+    }
   }
 
   return (
@@ -118,19 +149,64 @@ export default function CarDetail() {
         {/* Top grid */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', marginBottom: '100px' }}>
 
-          {/* Left — Images */}
+          {/* Left — Images + 3D */}
           <div>
+            {/* Tab switcher */}
+            {modelSrc && (
+              <div style={{ display: 'flex', marginBottom: '16px', border: '1px solid #1a1a1a', width: 'fit-content' }}>
+                {(['photos', '3d'] as ViewTab[]).map((tab) => (
+                  <button key={tab} onClick={() => setViewTab(tab)} style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 300, fontSize: '9px', letterSpacing: '0.3em', textTransform: 'uppercase', padding: '10px 24px', cursor: 'pointer', border: 'none', background: viewTab === tab ? '#C9A96E' : 'transparent', color: viewTab === tab ? '#080808' : 'rgba(245,245,245,0.4)', transition: 'all 0.3s ease' }}>
+                    {tab === 'photos' ? '📷 Photos' : '⟳ View in 3D'}
+                  </button>
+                ))}
+              </div>
+            )}
+
             <AnimatePresence mode="wait">
-              {viewTab === 'photos' && (
-                <motion.div key="photos" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
-                  <div style={{ aspectRatio: '16/9', overflow: 'hidden', marginBottom: '12px', border: '1px solid #1a1a1a' }}>
-                    <img src={allImages[activeImage]} alt={car.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+  {/* Photos */}
+  {viewTab === 'photos' && (
+    <motion.div key="photos" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}>
+      <div style={{ overflow: 'hidden', border: '1px solid #1a1a1a', height: '400px' }}>
+  <img 
+    src={allImages[0]} 
+    alt={car.name} 
+    style={{ 
+      width: '100%', 
+      height: '100%', 
+      objectFit: 'contain',
+      background: '#0d0d0d',
+    }} 
+  />
+</div>
+    </motion.div>
+  )}
+
+              {/* 3D Viewer */}
+              {viewTab === '3d' && modelSrc && (
+                <motion.div key="3d" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
+                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', background: '#0d0d0d', border: '1px solid #1a1a1a', overflow: 'hidden' }}>
+                    {/* @ts-ignore */}
+                    <model-viewer
+                      src={modelSrc}
+                      alt={`3D model of ${car.name}`}
+                      auto-rotate
+                      camera-controls
+                      shadow-intensity="1"
+                      exposure="0.8"
+                      style={{ width: '100%', height: '100%', background: 'transparent', '--progress-bar-color': '#C9A96E' } as React.CSSProperties}
+                    >
+                      <div slot="poster" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '12px', background: '#0d0d0d' }}>
+                        <div style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 300, fontSize: '9px', letterSpacing: '0.4em', color: '#C9A96E', textTransform: 'uppercase' }}>Loading 3D Model</div>
+                        <div style={{ width: '40px', height: '1px', background: '#C9A96E' }} />
+                      </div>
+                    </model-viewer>
+                    <div style={{ position: 'absolute', top: '12px', right: '12px', fontFamily: 'Montserrat, sans-serif', fontWeight: 300, fontSize: '8px', letterSpacing: '0.3em', color: '#C9A96E', background: 'rgba(8,8,8,0.85)', border: '1px solid rgba(201,169,110,0.3)', padding: '5px 10px', textTransform: 'uppercase', pointerEvents: 'none' }}>
+                      3D · Drag to Rotate
+                    </div>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px' }}>
-                    {allImages.map((img, i) => (
-                      <motion.div key={i} onClick={() => setActiveImage(i)} style={{ flex: 1, aspectRatio: '16/9', overflow: 'hidden', cursor: 'pointer', opacity: activeImage === i ? 1 : 0.4, border: activeImage === i ? '1px solid #C9A96E' : '1px solid transparent', transition: 'all 0.3s ease' }}>
-                        <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      </motion.div>
+                  <div style={{ display: 'flex', gap: '24px', marginTop: '12px', justifyContent: 'center' }}>
+                    {['🖱 Drag to rotate', '🔍 Scroll to zoom', '✋ Right-click to pan'].map((hint) => (
+                      <div key={hint} style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 300, fontSize: '9px', letterSpacing: '0.15em', color: 'rgba(245,245,245,0.25)', textTransform: 'uppercase' }}>{hint}</div>
                     ))}
                   </div>
                 </motion.div>
@@ -143,6 +219,7 @@ export default function CarDetail() {
             <div style={{ display: 'flex', gap: '10px', marginBottom: '16px', alignItems: 'center', flexWrap: 'wrap' }}>
               <span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '9px', letterSpacing: '0.3em', color: '#C9A96E', background: 'rgba(201,169,110,0.08)', border: '1px solid rgba(201,169,110,0.3)', padding: '5px 12px', textTransform: 'uppercase' }}>{car.category}</span>
               {!car.in_stock && (<span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '9px', letterSpacing: '0.2em', color: '#888', border: '1px solid #333', padding: '5px 12px', textTransform: 'uppercase' }}>SOLD</span>)}
+              {modelSrc && (<span style={{ fontFamily: 'Montserrat, sans-serif', fontSize: '9px', letterSpacing: '0.2em', color: '#C9A96E', border: '1px solid rgba(201,169,110,0.25)', padding: '5px 12px', textTransform: 'uppercase' }}>✦ 3D Available</span>)}
             </div>
 
             <h1 style={{ fontFamily: 'Cormorant Garamond, serif', fontWeight: 300, fontSize: 'clamp(36px, 4vw, 56px)', letterSpacing: '0.08em', color: '#F5F5F5', margin: '0 0 8px', lineHeight: 1.1 }}>{car.name}</h1>
@@ -152,7 +229,6 @@ export default function CarDetail() {
             <div style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 500, fontSize: '28px', color: '#C9A96E', letterSpacing: '0.06em', marginBottom: '36px' }}>{formatPrice()}</div>
             <div style={{ height: '1px', background: '#1a1a1a', marginBottom: '28px' }} />
 
-            {/* Specs grid */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '12px', marginBottom: '36px' }}>
               {[
                 { label: 'Engine', value: car.specs?.engine },
@@ -248,7 +324,9 @@ export default function CarDetail() {
                 <label style={{ fontSize: '9px', letterSpacing: '0.2em', color: '#555', textTransform: 'uppercase', display: 'block', marginBottom: '10px' }}>Preferred Time Slot</label>
                 <select required value={bookingForm.time} onChange={e => setBookingForm({ ...bookingForm, time: e.target.value })} style={{ width: '100%', background: '#111', border: '1px solid #333', color: bookingForm.time ? '#F5F5F5' : '#555', padding: '14px 16px', fontFamily: 'Montserrat, sans-serif', fontSize: '13px', boxSizing: 'border-box' as const, outline: 'none' }}>
                   <option value="">Select a time slot</option>
-                  {['10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'].map(t => (<option key={t} value={t}>{t}</option>))}
+                  {['10:00', '11:00', '12:00', '14:00', '15:00', '16:00', '17:00'].map(t => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
                 </select>
               </div>
               <motion.button type="submit" whileHover={{ background: '#C9A96E', color: '#080808' }} transition={{ duration: 0.2 }} style={{ width: '100%', background: 'transparent', border: '1px solid #C9A96E', color: '#C9A96E', padding: '18px', fontFamily: 'Montserrat, sans-serif', fontSize: '11px', letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', boxSizing: 'border-box' as const }}>

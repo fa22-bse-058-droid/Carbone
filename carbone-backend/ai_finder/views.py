@@ -5,7 +5,7 @@ from django.conf import settings
 from cars.models import Car
 from cars.serializers import CarListSerializer
 from .serializers import AIFinderRequestSerializer
-import anthropic
+from groq import Groq
 import json
 
 class AIFinderView(APIView):
@@ -18,21 +18,18 @@ class AIFinderView(APIView):
         use_case = serializer.validated_data['use_case']
         vibe = serializer.validated_data['vibe']
 
-        # Get available inventory
-        cars = Car.objects.filter(in_stock=True).values(
-            'id', 'name', 'brand', 'year', 'price',
-            'price_formatted', 'category', 'fuel_type',
-            'transmission', 'specs'
-        )
-
-        # Map budget to price range
         price_map = {
-            'under-50l':  (0, 5000000),
-            '50l-1cr':    (5000000, 10000000),
-            'above-1cr':  (10000000, 999999999),
-        }
-        min_price, max_price = price_map[budget]
-        cars = cars.filter(price__gte=min_price, price__lte=max_price)
+            '50l-1cr':   (5000000, 10000000),
+            '1cr-2cr':   (10000000, 20000000),
+            'above-2cr': (20000000, 999999999),
+}
+        min_price, max_price = price_map.get(budget, (0, 999999999))
+
+        cars = Car.objects.filter(
+            in_stock=True,
+            price__gte=min_price,
+            price__lte=max_price
+        ).values('id', 'name', 'brand', 'year', 'price', 'category', 'fuel_type', 'transmission', 'specs')
 
         if not cars.exists():
             return Response(
@@ -40,46 +37,47 @@ class AIFinderView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        car_list = list(cars[:15])  # Send max 15 to Claude
+        car_list = list(cars[:15])
 
         prompt = f"""You are a luxury automobile advisor for Carbone, Pakistan's premier luxury car showroom.
-
-A client has answered 3 questions:
+A client answered 3 questions:
 - Budget: {budget}
 - Primary use: {use_case}
-- Vibe/style preference: {vibe}
+- Vibe/style: {vibe}
 
-Available inventory (in budget):
+Available inventory:
 {json.dumps(car_list, indent=2, default=str)}
 
-Recommend the TOP 3 best matching cars from this exact inventory.
-Respond ONLY with a JSON array, no other text:
+Recommend TOP 3 best matching cars from this exact inventory.
+Respond ONLY with a JSON array, no markdown, no extra text:
 [
   {{
-    "car_id": <id from inventory>,
+    "car_id": <id>,
     "car_name": "<name>",
-    "reason": "<2 sentence luxury-tone explanation why this car matches>",
+    "reason": "<2 sentence luxury-tone explanation>",
     "match_score": <85-99>
   }}
 ]"""
 
         try:
-            client = anthropic.Anthropic(api_key=settings.ANTHROPIC_API_KEY)
-            message = client.messages.create(
-                model='claude-sonnet-4-20250514',
+            client = Groq(api_key=settings.GROQ_API_KEY)
+            response = client.chat.completions.create(
+                model='llama-3.3-70b-versatile',
+                messages=[{'role': 'user', 'content': prompt}],
                 max_tokens=1000,
-                messages=[{'role': 'user', 'content': prompt}]
+                temperature=0.7,
             )
+            raw = response.choices[0].message.content.strip()
 
-            raw = message.content[0].text.strip()
             # Strip markdown fences if present
             if raw.startswith('```'):
                 raw = raw.split('```')[1]
                 if raw.startswith('json'):
                     raw = raw[4:]
+            raw = raw.strip()
+
             recommendations = json.loads(raw)
 
-            # Enrich with full car data
             result = []
             for rec in recommendations:
                 try:
