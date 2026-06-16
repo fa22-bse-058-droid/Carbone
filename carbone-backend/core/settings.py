@@ -104,5 +104,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
 }
 
-# ── Anthropic ─────────────────────────────────────────────────────────────────
+
 GROQ_API_KEY = env('GROQ_API_KEY')
