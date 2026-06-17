@@ -102,7 +102,7 @@ export default function Inventory() {
   const compareCount = compareCars.length
 
   const getBadge = (car: CarItem) => car.category.toUpperCase()
-const getSpecs = (car: CarItem) => {
+  const getSpecs = (car: CarItem) => {
   const s = car.specs || {}
   const engine = s.engine && s.horsepower ? `${s.engine} · ${s.horsepower} HP` : ''
   const trans = car.transmission ? car.transmission.charAt(0).toUpperCase() + car.transmission.slice(1) : ''

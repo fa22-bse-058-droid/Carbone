@@ -5,6 +5,7 @@ import FeaturedCars from '../components/FeaturedCars/FeaturedCars'
 import AIFinderCTA from '../components/AIFinderCTA/AIFinderCTA'
 import Footer from '../components/Footer/Footer'
 
+
 export default function Home() {
   return (
     <main style={{ background: '#080808' }}>
