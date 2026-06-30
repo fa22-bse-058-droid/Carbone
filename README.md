@@ -1,11 +1,10 @@
-```markdown
 <div align="center">
 
 # CARBONE
 
 ### Luxury Automobile Showroom
 
-*Engineering Luxury Redefined* 
+*Engineering Luxury Redefined*
 
 [![React](https://img.shields.io/badge/React_18-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://typescriptlang.org)
@@ -30,6 +29,7 @@ Every design and engineering decision prioritises a single goal: make the user f
 ## Screenshots
 
 > Home · Inventory · Car Detail · Services · About · Contact
+
 <img width="1918" height="906" alt="Screenshot 2026-06-04 235024" src="https://github.com/user-attachments/assets/2d637389-3220-4427-a5af-af982e61d66f" />
 <img width="1918" height="908" alt="Screenshot 2026-06-17 202431" src="https://github.com/user-attachments/assets/1578eeba-abe1-4cbf-8604-6d3357112e15" />
 
@@ -38,12 +38,6 @@ Every design and engineering decision prioritises a single goal: make the user f
 
 <img width="1918" height="896" alt="Screenshot 2026-06-17 202523" src="https://github.com/user-attachments/assets/ea4492a1-d8b7-4908-8ca2-e4f987eddb7f" />
 <img width="1918" height="911" alt="Screenshot 2026-06-17 202625" src="https://github.com/user-attachments/assets/10ed5479-c7e1-413a-8a70-2f5b60a58d5e" />
-
-
-
-
-
-
 
 ---
 
@@ -254,77 +248,6 @@ python manage.py runserver
 ```
 
 ---
-─────────────────────────────────────────
-COLORS
-─────────────────────────────────────────
-Background Primary    #080808
-Background Secondary  #111111
-Background Tertiary   #1a1a1a
-Accent Gold           #C9A96E
-Text Primary          #F5F5F5
-Text Muted            #888888
-─────────────────────────────────────────
-TYPOGRAPHY
-─────────────────────────────────────────
-Headings    Cormorant Garamond  300 · 400 · 500
-Body / UI   Montserrat          300 · 400 · 500
-─────────────────────────────────────────
-ANIMATION RULES
-─────────────────────────────────────────
-Only animate transform and opacity
-GPU-accelerated — zero layout recalc
-Slow = luxury · Fast = cheap
-─────────────────────────────────────────
-
----
-
-## Project Structure
-Carbone/
-├── carbone-web/                  # React frontend
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── Preloader/        # GSAP logo animation
-│   │   │   ├── Navbar/           # Fixed nav, scroll behavior
-│   │   │   ├── Hero/             # Cinematic video hero
-│   │   │   ├── CarCard/          # Inventory card component
-│   │   │   ├── Compare/          # Side-by-side panel
-│   │   │   ├── AIFinder/         # Quiz + API integration
-│   │   │   └── Layout/           # App shell
-│   │   ├── pages/
-│   │   │   ├── Home.tsx
-│   │   │   ├── Inventory.tsx
-│   │   │   ├── CarDetail.tsx
-│   │   │   ├── Services.tsx
-│   │   │   ├── About.tsx
-│   │   │   ├── Contact.tsx
-│   │   │   └── AIFinderPage.tsx
-│   │   ├── store/                # Zustand stores
-│   │   ├── api/                  # Axios client + endpoints
-│   │   ├── types/                # TypeScript interfaces
-│   │   ├── hooks/                # useGSAP, useLenis
-│   │   └── assets/               # Images, logo, 3D models
-│   ├── public/
-│   │   ├── hero.mp4
-│   │   └── hero-poster.jpg
-│   ├── vercel.json
-│   └── .env
-│
-└── carbone-backend/              # Django backend
-├── cars/                     # Car model + API
-├── inquiries/                # Inquiry + booking
-├── ai_finder/                # Anthropic API view
-└── manage.py
-
----
-
-## Getting Started
-
-### Prerequisites
-
-```bash
-node >= 18
-python >= 3.11
-```
 
 ## Environment Variables
 
@@ -396,7 +319,6 @@ Vercel Settings:
 
 ---
 
-
 [![GitHub](https://img.shields.io/badge/GitHub-fa22--bse--058--droid-181717?style=flat&logo=github)](https://github.com/fa22-bse-058-droid)
 
 ---
@@ -406,5 +328,3 @@ Vercel Settings:
 *Carbone — Where every vehicle tells a story of excellence.*
 
 </div>
-```
-
