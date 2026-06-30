@@ -254,6 +254,77 @@ python manage.py runserver
 ```
 
 ---
+─────────────────────────────────────────
+COLORS
+─────────────────────────────────────────
+Background Primary    #080808
+Background Secondary  #111111
+Background Tertiary   #1a1a1a
+Accent Gold           #C9A96E
+Text Primary          #F5F5F5
+Text Muted            #888888
+─────────────────────────────────────────
+TYPOGRAPHY
+─────────────────────────────────────────
+Headings    Cormorant Garamond  300 · 400 · 500
+Body / UI   Montserrat          300 · 400 · 500
+─────────────────────────────────────────
+ANIMATION RULES
+─────────────────────────────────────────
+Only animate transform and opacity
+GPU-accelerated — zero layout recalc
+Slow = luxury · Fast = cheap
+─────────────────────────────────────────
+
+---
+
+## Project Structure
+Carbone/
+├── carbone-web/                  # React frontend
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Preloader/        # GSAP logo animation
+│   │   │   ├── Navbar/           # Fixed nav, scroll behavior
+│   │   │   ├── Hero/             # Cinematic video hero
+│   │   │   ├── CarCard/          # Inventory card component
+│   │   │   ├── Compare/          # Side-by-side panel
+│   │   │   ├── AIFinder/         # Quiz + API integration
+│   │   │   └── Layout/           # App shell
+│   │   ├── pages/
+│   │   │   ├── Home.tsx
+│   │   │   ├── Inventory.tsx
+│   │   │   ├── CarDetail.tsx
+│   │   │   ├── Services.tsx
+│   │   │   ├── About.tsx
+│   │   │   ├── Contact.tsx
+│   │   │   └── AIFinderPage.tsx
+│   │   ├── store/                # Zustand stores
+│   │   ├── api/                  # Axios client + endpoints
+│   │   ├── types/                # TypeScript interfaces
+│   │   ├── hooks/                # useGSAP, useLenis
+│   │   └── assets/               # Images, logo, 3D models
+│   ├── public/
+│   │   ├── hero.mp4
+│   │   └── hero-poster.jpg
+│   ├── vercel.json
+│   └── .env
+│
+└── carbone-backend/              # Django backend
+├── cars/                     # Car model + API
+├── inquiries/                # Inquiry + booking
+├── ai_finder/                # Anthropic API view
+└── manage.py
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+```bash
+node >= 18
+python >= 3.11
+```
 
 ## Environment Variables
 
